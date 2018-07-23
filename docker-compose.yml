@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   store:
     image: samply/samply.store:0.2.1-alpha-3
@@ -9,6 +9,8 @@ services:
     - gba
     ports:
     - "8080:8080"
+    depends_on:
+    - db
   db:
     image: postgres:9.6
     environment:
@@ -18,6 +20,12 @@ services:
     - gba
     ports:
     - "5432:5432"
+    volumes:
+    - type: volume
+      source: db-data
+      target: /var/lib/postgresql/data
 networks:
   gba:
     driver: bridge
+volumes:
+  db-data:
