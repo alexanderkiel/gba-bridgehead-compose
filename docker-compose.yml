@@ -11,6 +11,7 @@ services:
     - "8080:8080"
     depends_on:
     - db
+    restart: always
   db:
     image: postgres:9.6
     environment:
@@ -24,6 +25,7 @@ services:
     - type: volume
       source: db-data
       target: /var/lib/postgresql/data
+    restart: always
 networks:
   gba:
     driver: bridge
