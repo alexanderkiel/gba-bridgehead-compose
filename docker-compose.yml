@@ -1,0 +1,19 @@
+version: '3'
+services:
+  store:
+    image: samply/samply.store:0.2.1-alpha-3
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PASS: samplystore
+    networks:
+    - gba
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: samplystore
+      POSTGRES_PASSWORD: samplystore
+    networks:
+    - gba
+networks:
+  gba:
+    driver: bridge
