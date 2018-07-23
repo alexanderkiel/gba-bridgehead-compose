@@ -7,6 +7,8 @@ services:
       POSTGRES_PASS: samplystore
     networks:
     - gba
+    ports:
+    - "8080:8080"
   db:
     image: postgres:9.6
     environment:
@@ -14,6 +16,8 @@ services:
       POSTGRES_PASSWORD: samplystore
     networks:
     - gba
+    ports:
+    - "5432:5432"
 networks:
   gba:
     driver: bridge
