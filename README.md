@@ -29,15 +29,15 @@ You can either stop all services occupying those ports or simply edit the `docke
 
 ### Store
 
-You can access the Store under `http://localhost:8080/gba-store`. A simple test is fetching the import XSD under: `http://localhost:8080/gba-store/importXSD`.
+You can access the Store under http://localhost:8080/gba-store. A simple test is fetching the import XSD under: http://localhost:8080/gba-store/importXSD.
 
 ### Connector
 
-You can access the Connector under `http://localhost:8081/gba-connector/` and login to it under `http://localhost:8081/gba-connector/login.xhtml`.
+You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml.
 
 ### Grafana
 
-You can access Grafana under `http://localhost:3000`. The login credentials are **admin**, **admin**.
+You can access Grafana under http://localhost:3000. The login credentials are **admin**, **admin**.
 
 There are two dashboards available. One for the Store and one for the Connector. Currently, they only show JVM metrics.
 
