@@ -1,6 +1,8 @@
 # Docker Compose File for GBA Bridgehead
 
-The bridgehead consists of two main components, the store and the connector. In addition to that both need a Postgres database. To showcase monitoring, a Prometheus instance together with Grafana is also included.
+The bridgehead consists of two main components, the store and the connector. In addition to that, both need a Postgres database. To showcase monitoring, a Prometheus instance together with Grafana is also included.
+
+This Docker Compose project includes both, the [Store][1] and the [Connector][2]. If one needs only one of them, on can either bring up only the specific one or create a custom Docker Compose file.
 
 ## Usage
 
