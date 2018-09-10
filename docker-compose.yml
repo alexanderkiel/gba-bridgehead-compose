@@ -35,6 +35,7 @@ services:
     environment:
       POSTGRES_HOST: connector-db
       POSTGRES_PASS: samplyconnector
+      STORE_URL: http://store:8080/gba-store
       CATALINA_OPTS: "-Xmx1g"
       ENABLE_METRICS: "true"
     networks:
