@@ -43,3 +43,23 @@ There are two dashboards available. One for the Store and one for the Connector.
 
 * Store dashboard: http://localhost:3000/d/wEuwMIpmz
 * Connector dashboard: http://localhost:3000/d/wEuwMIpmy
+
+## Partial Usage
+
+One can bring up only parts of the services by starting them individually. For example: starting only the store by starting it's DB and the store itself:
+
+```sh
+docker-compose up -d store-db
+docker-compose up -d store
+```
+
+For the connector:
+
+```sh
+docker-compose up -d connector-db
+docker-compose up -d connector
+```
+
+
+[1]: <https://bitbucket.org/medicalinformatics/samply.store.docker>
+[2]: <https://github.com/alexanderkiel/samply.connector.docker>
