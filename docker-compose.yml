@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   store:
-    image: samply/samply.store:4.2.4-1
+    image: samply/samply.store:4.2.4-2
     environment:
       POSTGRES_HOST: store-db
       POSTGRES_PASS: samplystore
