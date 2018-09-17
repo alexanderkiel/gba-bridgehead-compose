@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   store:
-    image: samply/samply.store:4.2.4-2
+    image: samply/samply.store:4.2.5
     environment:
       POSTGRES_HOST: store-db
       POSTGRES_PASS: samplystore
@@ -31,7 +31,7 @@ services:
       target: /var/lib/postgresql/data
     restart: always
   connector:
-    image: akiel/samply.connector:0.1-alpha2
+    image: akiel/samply.connector:0.1-alpha3
     environment:
       POSTGRES_HOST: connector-db
       POSTGRES_PASS: samplyconnector
