@@ -1,61 +1,89 @@
 version: '3.2'
 services:
   store:
-    image: samply/samply.store:4.2.5
+    image: samply/samply.store:4.2.6
     environment:
-      POSTGRES_HOST: store-db
-      POSTGRES_PASS: samplystore
-      CATALINA_OPTS: "-Xmx4g"
-      ENABLE_METRICS: "true"
+      MDR_URL: ${MDR_URL}
+      PROXY_URL: ${PROXY_URL}
+      PROXY_USER: ${PROXY_USER}
+      PROXY_PASS: ${PROXY_PASS}
+      MDR_NAMESPACE: ${STORE_MDR_NAMESPACE}
+      MDR_MAP: ${STORE_MDR_MAP}
+      MDR_VALIDATION: ${STORE_MDR_VALIDATION}
+      POSTGRES_HOST: ${STORE_POSTGRES_HOST}
+      POSTGRES_PORT: ${STORE_POSTGRES_PORT}
+      POSTGRES_DB: ${STORE_POSTGRES_DB}
+      POSTGRES_USER: ${STORE_POSTGRES_USER}
+      POSTGRES_PASS: ${STORE_POSTGRES_PASS}
+      CATALINA_OPTS: ${STORE_CATALINA_OPTS}
+      ENABLE_METRICS: ${STORE_ENABLE_METRICS}
     networks:
-    - gba
-    - store-db
+      - gba
+      - store-db
     ports:
-    - "8080:8080"
-    - "9100:9100"
+      - "${PORT_STORE:-8080}:8080"
+      - "${PORT_STORE_METRICS:-9100}:9100"
     depends_on:
-    - store-db
+      - store-db
     restart: always
   store-db:
     image: postgres:9.6
     environment:
-      POSTGRES_USER: samplystore
-      POSTGRES_PASSWORD: samplystore
+      POSTGRES_USER: ${STORE_POSTGRES_USER:-samplystore}
+      POSTGRES_PASSWORD: ${STORE_POSTGRES_PASS:-samplystore}
+      POSTGRES_DB: ${STORE_POSTGRES_DB:-samplystore}
     networks:
-    - store-db
+      - store-db
     ports:
-    - "5432:5432"
+      - "${PORT_STORE_POSTGRES:-5432}:5432"
     volumes:
-    - type: volume
-      source: store-db-data
-      target: /var/lib/postgresql/data
+      - type: volume
+        source: store-db-data
+        target: /var/lib/postgresql/data
     restart: always
   connector:
     image: akiel/samply.connector:0.1
     environment:
-      POSTGRES_HOST: connector-db
-      POSTGRES_PASS: samplyconnector
-      STORE_URL: http://store:8080/gba-store
-      CATALINA_OPTS: "-Xmx1g"
-      ENABLE_METRICS: "true"
+      MDR_URL: ${MDR_URL}
+      HTTP_PROXY: ${PROXY_URL}
+      PROXY_USER: ${PROXY_USER}
+      PROXY_PASS: ${PROXY_PASS}
+      POSTGRES_HOST: ${CONNECTOR_POSTGRES_HOST}
+      POSTGRES_PORT: ${CONNECTOR_POSTGRES_PORT}
+      POSTGRES_DB: ${CONNECTOR_POSTGRES_DB}
+      POSTGRES_USER: ${CONNECTOR_POSTGRES_USER}
+      POSTGRES_PASS: ${CONNECTOR_POSTGRES_PASS}
+      STORE_URL: ${CONNECTOR_STORE_URL}
+      CATALINA_OPTS: ${CONNECTOR_CATALINA_OPTS}
+      ENABLE_METRICS: ${CONNECTOR_ENABLE_METRICS}
+      OPERATOR_FIRST_NAME: ${CONNECTOR_OPERATOR_FIRST_NAME}
+      OPERATOR_LAST_NAME: ${CONNECTOR_OPERATOR_LAST_NAME}
+      OPERATOR_EMAIL: ${CONNECTOR_OPERATOR_EMAIL}
+      OPERATOR_PHONE: ${CONNECTOR_OPERATOR_PHONE}
+      MAIL_HOST: ${CONNECTOR_MAIL_HOST}
+      MAIL_PORT: ${CONNECTOR_MAIL_PORT}
+      MAIL_PROTOCOL: ${CONNECTOR_MAIL_PROTOCOL}
+      MAIL_FROM_ADDRESS: ${CONNECTOR_MAIL_FROM_ADDRESS}
+      MAIL_FROM_NAME: ${CONNECTOR_MAIL_FROM_NAME}
     networks:
-    - gba
-    - connector-db
+      - gba
+      - connector-db
     ports:
-    - "8081:8080"
-    - "9101:9100"
+      - "${PORT_CONNECTOR:-8081}:8080"
+      - "${PORT_CONNECTOR_METRICS:-9101}:9100"
     depends_on:
-    - connector-db
+      - connector-db
     restart: always
   connector-db:
     image: postgres:9.6
     environment:
-      POSTGRES_USER: samplyconnector
-      POSTGRES_PASSWORD: samplyconnector
+      POSTGRES_USER: ${CONNECTOR_POSTGRES_USER:-samplyconnector}
+      POSTGRES_PASSWORD: ${CONNECTOR_POSTGRES_PASS:-samplyconnector}
+      POSTGRES_DB: ${CONNECTOR_POSTGRES_DB:-samplyconnector}
     networks:
     - connector-db
     ports:
-    - "5433:5432"
+    - "${PORT_CONNECTOR_POSTGRES:-5433}:5432"
     volumes:
     - type: volume
       source: connector-db-data
@@ -64,14 +92,14 @@ services:
   prometheus:
     image: prom/prometheus:v2.3.2
     networks:
-    - gba
+      - gba
     ports:
-    - "9090:9090"
+      - "${PORT_PROMETHEUS:-9090}:9090"
     volumes:
-    - type: bind
-      source: ./prometheus
-      target: /etc/prometheus
-      read_only: true
+      - type: bind
+        source: ./prometheus
+        target: /etc/prometheus
+        read_only: true
     restart: always
   grafana:
     image: grafana/grafana:5.2.2
@@ -79,20 +107,20 @@ services:
       GF_SESSION_PROVIDER: memory
       GF_LOG_MODE: console
     networks:
-    - gba
+      - gba
     ports:
-    - "3000:3000"
+      - "${PORT_GRAFANA:-3000}:3000"
     volumes:
-    - type: volume
-      source: grafana-data
-      target: /var/lib/grafana
-    - type: bind
-      source: ./grafana/dashboards
-      target: /var/lib/grafana-dashboards
-    - type: bind
-      source: ./grafana/provisioning
-      target: /etc/grafana/provisioning
-      read_only: true
+      - type: volume
+        source: grafana-data
+        target: /var/lib/grafana
+      - type: bind
+        source: ./grafana/dashboards
+        target: /var/lib/grafana-dashboards
+      - type: bind
+        source: ./grafana/provisioning
+        target: /etc/grafana/provisioning
+        read_only: true
     restart: always
 networks:
   gba:
