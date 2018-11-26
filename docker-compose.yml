@@ -24,7 +24,7 @@ services:
     networks:
     - store-db
     ports:
-    - "5432:5432"
+    - "5434:5432"
     volumes:
     - type: volume
       source: store-db-data
@@ -52,6 +52,7 @@ services:
     environment:
       POSTGRES_USER: samplyconnector
       POSTGRES_PASSWORD: samplyconnector
+      POSTGRES_DB: samplyconnector
     networks:
     - connector-db
     ports:
