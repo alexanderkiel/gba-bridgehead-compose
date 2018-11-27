@@ -33,9 +33,26 @@ You can either stop all services occupying those ports or simply edit the `docke
 
 You can access the Store under http://localhost:8080/gba-store. A simple test is fetching the import XSD under: http://localhost:8080/gba-store/importXSD.
 
+Most work is to import patient/sample data into the store. You have to create a xml file which will be tested against our Metadata Repository.
+The current namespace where all data-elements are defined and all GBA-Components work with can be found under http://mdr.germanbiobanknode.de/view.xhtml?namespace=mdr16
+
+Instructions for import can be found [here](import/IMPORT.md)
+
 ### Connector
 
-You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml.
+You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml (username=admin, password=adminpass).
+
+Add a Searchbroker to get and answer queries at http://localhost:8081/admin/broker_list.xhtml 
+* Broker Adresse = https://search.germanbiobanknode.de/broker/
+* Ihre Email Adresse = your email address to get the API-Key for registration
+* Automatisch antworten = Nur Anzahl (default, so you answer automatically with number of samples)
+
+You will receive an email with API-Key from Searchbroker Backend, paste these eight numbers and press "ok"
+
+Create a new user at http://localhost:8081/gba-connector/admin/user_list.xhtml
+
+Logout and login as normal user to see all handled queries.
+
 
 ### Grafana
 
