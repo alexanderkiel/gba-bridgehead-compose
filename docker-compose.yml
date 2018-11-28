@@ -31,7 +31,7 @@ services:
       target: /var/lib/postgresql/data
     restart: always
   connector:
-    image: akiel/samply.connector:0.1-alpha3
+    image: akiel/samply.connector:0.1
     environment:
       POSTGRES_HOST: connector-db
       POSTGRES_PASS: samplyconnector

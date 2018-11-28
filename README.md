@@ -35,7 +35,9 @@ You can access the Store under http://localhost:8080/gba-store. A simple test is
 
 ### Connector
 
-You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml.
+You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml. The default username and password is `admin` and `adminpass`.
+
+You can register your Connector with the Search Broker under the following address: `https://search.germanbiobanknode.de/broker`.
 
 ### Grafana
 
