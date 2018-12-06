@@ -163,7 +163,7 @@ key="xyz:def:ghi:4:5"
 <genericAttribute key="urn:mdr16:dataelement:22:1">24.12.1950</genericAttribute>
 <!--Date of birth-->
 <genericAttribute key="urn:mdr16:dataelement:23:1">female</genericAttribute>
-<!–-Biological gender-->
+<!--Biological gender-->
 </donor>
 
 </store>

@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   store:
-    image: samply/samply.store:graz
+    image: ${STORE_IMAGE:-samply/samply.store:graz}
     environment:
       MDR_URL: ${MDR_URL}
       PROXY_URL: ${PROXY_URL}
@@ -42,7 +42,7 @@ services:
         target: /var/lib/postgresql/data
     restart: always
   connector:
-    image: akiel/samply.connector:0.1
+    image: ${CONNECTOR_IMAGE:-akiel/samply.connector:0.1}
     environment:
       MDR_URL: ${MDR_URL}
       HTTP_PROXY: ${PROXY_URL}
