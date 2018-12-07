@@ -7,7 +7,7 @@ Samply.Store is implemented as a web service and does not have a graphical UI ye
 * Network Communication/Firewall: Outgoing http and https. Proxies are supported. No VPN or incoming ports required.
 
 # Data model
-![Datamodel](import/datamodel-sample.png)
+![Datamodel](https://github.com/martinbreu/gba-bridgehead-compose/blob/feature/Graz/import/datamodel-sample.png)
 
 # REST interface
 At the first start of the Tomcat server, the REST interface, the schema is created in the database. In addition, a user is created:
