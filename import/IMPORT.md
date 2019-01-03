@@ -1,50 +1,50 @@
-# Einleitung
-Der Samply.Store ist als Webservice implementiert und hat noch keine grafische Oberfläche. Daten werden als XML modelliert und über eine REST-Schnittstelle übergeben. 
+# Introduction
+Samply.Store is implemented as a web service and does not have a graphical UI yet. Data is modelled as XML and transferred via REST interface.
 
-# Systemvoraussetzungen
+# System requirements
 * Docker runnable
-* Intel Xeon E5-2630 oder besser, 64 GB RAM oder mehr, 500 GB Festplattenspeicher (je nach Datenvolumen) (unverbindliche Empfehlung)
-* Netzwerkkommunikation/Firewall: Ausgehend http und https. Proxies werden unterstützt. Keine VPN oder eingehende Ports notwendig.
+* Intel Xeon E5-2630 or better, 64 GB RAM or more, 500 GB disk space (recommendation, depends on amount of data)
+* Network Communication/Firewall: Outgoing http and https. Proxies are supported. No VPN or incoming ports required.
 
-# Datenmodell
-![Datamodel](import/datamodel-sample.png)
+# Data model
+![Datamodel](https://github.com/martinbreu/gba-bridgehead-compose/blob/feature/Graz/import/datamodel-sample.png)
 
-# REST-Schnittstelle
-Beim ersten Start des Tomcat-Servers, der REST-Schnittstelle, wird in der Datenbank das Schema angelegt. Zudem wird ein User angelegt:
+# REST interface
+At the first start of the Tomcat server, the REST interface, the schema is created in the database. In addition, a user is created:
 
-* Nutzer: "local_admin"
-* Passwort: "local_admin"
+* User: "local_admin"
+* Password: "local_admin"
 
-Für einen Datenimport in den Store, schickt man eine entsprechende XML-Datei als POST-Request an die REST-Schnittstelle: http://localhost:8080/gba-store/import. Im Header muss der Nutzer mit seinem Passwort als "Basic Auth" übermittelt werden.
+For a data import into the store, you send a corresponding XML file as a POST request to the REST interface: http://localhost:8080/gba-store/import. In the header the user must be transmitted with his password as "Basic Auth".
 
-Die technischen Mittel sind frei wählbar, z.B. besitzt Talend Open Studio ein Rest-Interface. Für den manuellen (ersten) Test empfehlen wir Postman oder Insomnia.
+The technical means are freely selectable, e.g. Talend Open Studio has a rest interface. For the manual test we recommend Postman or Insomnia.
 
-Das XML wird beim Import gegen eine XSD-Datei validiert. Dieses XSD kann man per GET-Request von der REST-Schnittstelle erhalten:
+The XML is validated against an XSD file during import. This XSD can be obtained via GET request from the REST interface:
 
 http://localhost:8080/gba-store/importXSD
 
-Zusätzlich werden standardmäßig die Einträge gegen das MDR validiert. Wenn Sie einen Proxy verwenden, so müssen Sie diesen beim Start angeben.
+In addition, the entries are validated against the MDR by default. If you use a proxy, you must specify it at startup.
 
-Alternativ kann auch ein "curl"-Befehl verwendet werden. Für Windows muss dieser nachinstalliert werden (falls nach Visual C gefragt wird: vc_redist.x64.exe), Bei Ubuntu und Debian muss curl ggf. per (sudo apt-get install curl) installiert werden.
+Alternatively, you can use a "curl" command. For Windows this command has to be installed (if Visual C is asked: vc_redist.x64.exe), for Ubuntu and Debian curl has to be installed by (sudo apt-get install curl).
 
-Export der XSD
+Exporting the XSD
 ```
 curl --output importXSD.xsd -X GET http://localhost:8080/gba-store/importXSD
 ```
 
-Import einer XML
+Importing an XML
 ```
 curl -H "Content-Type:application/xml" -d @export.xml http://local_admin:local_admin@localhost:8080/gba-store/import
 ```
 
-# Struktur der XML 
-Ein Beispiel für die Importdatei gibt es ganz unten.
+# Structure of the XML 
+An example for the import file can be found at the bottom.
 
-Das äußere Tag ist ein \<store xmlns="http://schema.samply.de/store">-Tag. 
+The outer tag is a \<store xmlns="http://schema.samply.de/store"> tag. 
 
-Innen kann jede Entität mit einem Tag entsprechend ihres Namens angegeben werden. Zusätzlich werden immer die id und ggf. Fremdschlüssel auf andere Entitäten im XML übermittelt. Die eigentlichen Felder werden durch ein \<genericAttribute key="urn:mdr16:dataelement:23:1">-Tag übermittelt, wobei der "key" für das Feld im MDR steht, dessen Wert immer ein String ist.
+Inside each entity can be specified with a tag corresponding to its name. In addition, the id and foreign keys are always transferred to other entities in the XML. The actual fields are transmitted by a \<genericAttribute key="urn:mdr16:dataelement:23:1"> tag, where the "key" stands for the field in the MDR whose value is always a string.
 
-Beispielhaft sieht ein Eintrag für eine Collection (zu einer Biobank mit id="Bio11") wie folgt aus:
+For example, an entry for a collection (for a biobank with id="Bio11") looks as follows:
 
 ```
 <collection id="Col22" biobankId="Bio11"> 
@@ -52,64 +52,62 @@ Beispielhaft sieht ein Eintrag für eine Collection (zu einer Biobank mit id="Bi
 </collection>
 ```
 
-Derzeit existieren die Entitäten: Biobank, Collection, Sample, SampleContext, Event und Donor. 
-
+Currently, the entities exist: Biobank, Collection, Sample, SampleContext, Event and Donor. 
 
 ## IDs
-Beim Import spielen die ID's des XML-Files eine entscheidende Rolle. Sie sind die Werte die in den Tags der einzelnen Entitäten angegeben werden - als id (id) oder Fremdschlüssel (z.B. biobankId). Sie werden als Key/Value-Pair im JSON-Format in der Datendank gespeichert. Mit dem festen Key: "samply_store_unique_name". (Dieser Key wird in zukünftigen Releases umbenannt in "local_id")
+The ID's of the XML file play a decisive role in the import. They are the values specified in the tags of the individual entities - as id (id) or foreign key (e.g. biobankId). They are stored as key/value pairs in JSON format in the data database. With the fixed key: "samply_store_unique_name". (This key will be renamed to "local_id" in future releases.)
 
-Samply.Store generiert für jeden Datensatz automatisch eine laufende Nummer (id in der Datenbank). Sie wird nur intern verwendet (z.B. für Fremdschlüsselbeziehungen) und tritt nach außen nicht in Erscheinung. 
+Samply.Store automatically generates a consecutive number for each record (id in the database). It is only used internally (for example, for foreign key relationships) and does not appear externally. 
 
-Wichtig: Die Id's aus dem XML (id) und Fremdschlüssel (biobankId) beziehen sich auf die Einträge im XML. Durch diese werden die 1-n-Beziehungen zwischen den Entitäten festgelegt und anhand der XSD wird überprüft, ob alle Fremdschlüssel valide sind. Es findet jedoch keine inhaltliche Validierung statt. 
+Important: The ids from the XML (id) and foreign key (biobankId) refer to the entries in the XML. These determine the 1 to n relationships between the entities and the XSD is used to check whether all foreign keys are valid. However, no content validation takes place. 
 
-## Überprüfen
-Derzeit ist keine Möglichkeit implementiert, um die Daten im Store zu überprüfen. Man kann die Überprüfung aber direkt auf der PostgreSQL-Datenbank vornehmen. Einfach geht dies mittels des Tools "pgAdmin", dieses ist nicht in der Installation inbegriffen und muss manuell installiert werden.
+## Check
+There is currently no way to check the data in the store. However, you can do this directly on the PostgreSQL database. This can be done by using the tool "pgAdmin", which is not included in the installation and has to be installed manually.
 
-Nutzt man pgAdmin, muss man sich zuerst mit dem bei der Installation erstellen Postgres-Server verbinden: Rechtsklick → Create Server. Unter dem Reiter Connection muss angegeben werden:
+If you use pgAdmin, you must first connect to the Postgres server created during the installation: Right click → Create Server. In the Connection tab you have to specify:
 
 * Host Name/address: localhost
 * Port: 5434
 * Username: samplystore
-* Passwort: samplystore
+* Password: samplystore
+
+## Update behavior
+If an entity is already stored in the store and sent again with an XSD, the fields are updated as follows:
+
+If an attribute already exists, it is replaced by the newly transmitted values (one or more).
+If an attribute does not yet exist, it is added to the list.
+If an attribute was present but is not sent along with it, it is retained.
+The entity is uniquely identified by its "samply_store_unique_name" (see above).
 
 
+Example:
 
-## Update-Verhalten
-Wenn eine Entität bereits im Store gespeichert ist und abermals mit einem XSD geschickt wird, so werden die Felder wie folgt aktualisiert:
+A biobank was imported with the following attributes:
 
-Wenn ein Attribut bereits vorhanden ist, wird es durch die neu übermittelten Werte ersetzt (ein oder mehrere)
-Wenn ein Attribut noch nicht vorhanden ist, wird es hinzugenommen
-Wenn ein Attribut vorhanden war aber nicht neu mitgeschickt wird, bleibt es erhalten
-Die Entität wird anhand ihres "samply_store_unique_name" eindeutig identifiziert (siehe oben).
-
-
-Beispiel:
-
-Eine Biobank wurde mit den Attributen importiert:
-
-key="xyz:def:ghi:1:5"       >Frankfurt
-key="xyz:def:ghi:2:5"       >Lübeck
-key="xyz:def:ghi:2:5"       >Hamburg
-key="xyz:def:ghi:3:5"       >Münster
+key="xyz:def:ghi:1:5"       
+key="xyz:def:ghi:2:5"       
+key="xyz:def:ghi:2:5"       
+key="xyz:def:ghi:3:5"       
  
  
-Die Biobank wird mit weiteren Attributen nochmal importiert:
+The biobank is imported again with additional attributes:
 
-key="xyz:def:ghi:1:5"       >Heidelberg
-key="xyz:def:ghi:2:5"       >Lübeck
-key="xyz:def:ghi:4:5"       >Hannover
+key="xyz:def:ghi:1:5"       
+key="xyz:def:ghi:2:5"       
+key="xyz:def:ghi:4:5"       
  
 
-Ergebnis
+Result:
 
-key="xyz:def:ghi:1:5"       >Heidelberg
-key="xyz:def:ghi:2:5"       >Lübeck 
-key="xyz:def:ghi:3:5"       >Münster 
-key="xyz:def:ghi:4:5"       >Hannover
+key="xyz:def:ghi:1:5"       
+key="xyz:def:ghi:2:5"       
+key="xyz:def:ghi:3:5"       
+key="xyz:def:ghi:4:5"       
 
 
 
-# Importdatei (Beispiel) 
+# Example import file 
+
 ```
 <?xml version="1.1" encoding="UTF-8"?>
 <store xmlns="http://schema.samply.de/store">
@@ -120,11 +118,13 @@ key="xyz:def:ghi:4:5"       >Hannover
 </biobank>
 
 <collection id="Col21" biobankId="Bio11">
-<genericAttribute key="urn:mdr16:dataelement:5:1">Brustkrebsstudie</genericAttribute>
+
+<genericAttribute key="urn:mdr16:dataelement:5:1">Breast cancer study</genericAttribute>
 </collection>
 
 <collection id="Col22" biobankId="Bio11">
-<genericAttribute key="urn:mdr16:dataelement:5:1">Herz-Kreislauf-Prävention für Raucher</genericAttribute>
+<genericAttribute key="urn:mdr16:dataelement:5:1">Prevention for smokers</genericAttribute>
+
 </collection>
 
 <sampleContext id="CON31" donorId="SNS51">
@@ -137,33 +137,39 @@ key="xyz:def:ghi:4:5"       >Hannover
 
 <sample id="S43" sampleContextId="CON32" collectionId="Col22">
 
-<!--Entnahmedatum-->
+<!--Sampling date-->
+
 <genericAttribute key="urn:mdr16:dataelement:12:1">01.01.2002</genericAttribute>
 </sample>
 
 <sample id="S44" sampleContextId="CON32" collectionId="Col22">
-<!--Entnahmedatum-->
+
+<!--Sampling date-->
+
 <genericAttribute key="urn:mdr16:dataelement:12:1">01.01.2003</genericAttribute>
 </sample>
 
 <event id="EvN61" donorId="SNS51">
 
 <genericAttribute key="urn:mdr16:dataelement:26:1">30.05.2002</genericAttribute>
-<!--Diagnosedatum-->
+
+<!--Diagnosis date-->
 <genericAttribute key="urn:mdr16:dataelement:27:1">A15.1</genericAttribute>
 </event>
 
 <event id="EvN62" donorId="SNS51">
 <genericAttribute key="urn:mdr16:dataelement:26:1">01.05.2003</genericAttribute>
-<!--Diagnosedatum-->
+
+<!--Diagnosis date-->
 <genericAttribute key="urn:mdr16:dataelement:27:1">I02.0</genericAttribute>
 </event>
 
 <donor id="SNS51">
 <genericAttribute key="urn:mdr16:dataelement:22:1">24.12.1950</genericAttribute>
-<!--Geburtsdatum-->
+
+<!--Date of birth-->
 <genericAttribute key="urn:mdr16:dataelement:23:1">female</genericAttribute>
-<!–Geschlecht biologisch-->
+<!--Biological gender-->
 </donor>
 
 </store>

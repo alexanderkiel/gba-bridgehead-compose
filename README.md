@@ -27,7 +27,70 @@ You might see Docker compose complaining about used ports. For this compose file
 * 9090 - Prometheus
 * 3000 - Grafana
 
-You can either stop all services occupying those ports or simply edit the `docker-compose.yml` at the root of the repo dir. Be sure to only edit the first (the inbound localhost) port in the ports declarations.
+You can either stop all services occupying those ports or change them with environments, see below.
+
+## Environment
+
+The Docker container needs certain environment variables to be able to run:
+
+#### Ports used outside compose
+* PORT_STORE - defaults to `8080`
+* PORT_CONNECTOR - defaults to `8081`
+* PORT_STORE_METRICS - defaults to `9100`
+* PORT_CONNECTOR_METRICS - defaults to `9101`
+* PORT_STORE_POSTGRES - defaults to `5432`
+* PORT_CONNECTOR_POSTGRES - defaults to `5433`
+* PORT_PROMETHEUS - defaults to `9090`
+* PORT_GRAFANA - defaults to `3000`
+
+#### Store specific
+* STORE_MDR_NAMESPACE - current namespace which changes after every change depending data-elements, defaults to `mdr16`
+* STORE_MDR_MAP - mapping of mdr elements and db, defaults to `<dataElementGroup name="biobank">urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name="collection">urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name="sample">urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name="sampleContext">urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name="donor">urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name="event">urn:mdr16:dataelementgroup:6:1</dataElementGroup>`
+* STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
+* STORE_POSTGRES_HOST - the host name of the Postgres DB, defaults to `store-db`. Change only if built-in-databse is not used
+* STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
+* STORE_POSTGRES_DB - the database name, defaults to `samplystore`
+* STORE_POSTGRES_USER - the database username, defaults to `samplystore`
+* STORE_POSTGRES_PASS - the database password, defaults to `samplystore`
+* STORE_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
+* STORE_ENABLE_METRICS - `true` to enable metrics (see below), defaults to `false`
+
+#### Connector specific
+* CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`
+* CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_DB - the database name, defaults to `samplyconnector`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_USER - the database username, defaults to `samplyconnector`
+* CONNECTOR_POSTGRES_PASS - the database password, defaults to `samplyconnector`
+* CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080/gba-store`
+* CONNECTOR_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
+* CONNECTOR_ENABLE_METRICS - `true` to enable metrics (see below), defaults to `false`
+* CONNECTOR_OPERATOR_FIRST_NAME - the IT staff which runs the connector
+* CONNECTOR_OPERATOR_LAST_NAME - the IT staff which runs the connector
+* CONNECTOR_OPERATOR_EMAIL - the IT staff which runs the connector
+* CONNECTOR_OPERATOR_PHONE - the IT staff which runs the connector
+* CONNECTOR_MAIL_HOST - mail host which is able to send mails, defaults to ``
+* CONNECTOR_MAIL_PORT - port to mail host, defaults to ``
+* CONNECTOR_MAIL_PROTOCOL - protocol for mail, defaults to ``
+* CONNECTOR_MAIL_FROM_ADDRESS - mail address from which mails are sent, defaults to ``
+* CONNECTOR_MAIL_FROM_NAME - subject of mails, defaults to ``
+
+#### Common
+* MDR_URL - api-url of mdr host, defaults to `http://mdr.germanbiobanknode.de/v3/api/mdr`
+* PROXY_URL - the URL of the HTTP proxy to use for outgoing connections, "url:port"; enables proxy usage if set
+* PROXY_USER - the user of the proxy account (optional)
+* PROXY_PASS - the password of the proxy account (optional)
+
+
+
+#### Save your environments
+In the repo directory, create a file called `.env`, here you can save your environments if default values changed.
+Docker-Compose will find this file at startup.
+
+`.env` example:
+```
+MDR_NAMESPACE=mdr17
+MDR_URL=https://mdr.germanbiobanknode.de/v3/api/mdr
+```
 
 ### Store
 
@@ -47,7 +110,8 @@ Add a Searchbroker to get and answer queries at http://localhost:8081/admin/brok
 * Ihre Email Adresse = your email address to get the API-Key for registration
 * Automatisch antworten = Nur Anzahl (default, so you answer automatically with number of samples)
 
-You will receive an email with API-Key from Searchbroker Backend, paste these eight numbers and press "ok"
+You will receive an email with API-Key from Searchbroker Backend, paste these eight numbers and press "ok". Call an ITC to validate your request.
+
 
 Create a new user at http://localhost:8081/gba-connector/admin/user_list.xhtml
 
