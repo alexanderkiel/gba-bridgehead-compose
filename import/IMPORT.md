@@ -54,7 +54,6 @@ For example, an entry for a collection (for a biobank with id="Bio11") looks as 
 
 Currently, the entities exist: Biobank, Collection, Sample, SampleContext, Event and Donor. 
 
-
 ## IDs
 The ID's of the XML file play a decisive role in the import. They are the values specified in the tags of the individual entities - as id (id) or foreign key (e.g. biobankId). They are stored as key/value pairs in JSON format in the data database. With the fixed key: "samply_store_unique_name". (This key will be renamed to "local_id" in future releases.)
 
@@ -71,8 +70,6 @@ If you use pgAdmin, you must first connect to the Postgres server created during
 * Port: 5434
 * Username: samplystore
 * Password: samplystore
-
-
 
 ## Update behavior
 If an entity is already stored in the store and sent again with an XSD, the fields are updated as follows:
@@ -110,6 +107,7 @@ key="xyz:def:ghi:4:5"
 
 
 # Example import file 
+
 ```
 <?xml version="1.1" encoding="UTF-8"?>
 <store xmlns="http://schema.samply.de/store">
@@ -120,11 +118,13 @@ key="xyz:def:ghi:4:5"
 </biobank>
 
 <collection id="Col21" biobankId="Bio11">
+
 <genericAttribute key="urn:mdr16:dataelement:5:1">Breast cancer study</genericAttribute>
 </collection>
 
 <collection id="Col22" biobankId="Bio11">
 <genericAttribute key="urn:mdr16:dataelement:5:1">Prevention for smokers</genericAttribute>
+
 </collection>
 
 <sampleContext id="CON31" donorId="SNS51">
@@ -138,29 +138,35 @@ key="xyz:def:ghi:4:5"
 <sample id="S43" sampleContextId="CON32" collectionId="Col22">
 
 <!--Sampling date-->
+
 <genericAttribute key="urn:mdr16:dataelement:12:1">01.01.2002</genericAttribute>
 </sample>
 
 <sample id="S44" sampleContextId="CON32" collectionId="Col22">
+
 <!--Sampling date-->
+
 <genericAttribute key="urn:mdr16:dataelement:12:1">01.01.2003</genericAttribute>
 </sample>
 
 <event id="EvN61" donorId="SNS51">
 
 <genericAttribute key="urn:mdr16:dataelement:26:1">30.05.2002</genericAttribute>
+
 <!--Diagnosis date-->
 <genericAttribute key="urn:mdr16:dataelement:27:1">A15.1</genericAttribute>
 </event>
 
 <event id="EvN62" donorId="SNS51">
 <genericAttribute key="urn:mdr16:dataelement:26:1">01.05.2003</genericAttribute>
+
 <!--Diagnosis date-->
 <genericAttribute key="urn:mdr16:dataelement:27:1">I02.0</genericAttribute>
 </event>
 
 <donor id="SNS51">
 <genericAttribute key="urn:mdr16:dataelement:22:1">24.12.1950</genericAttribute>
+
 <!--Date of birth-->
 <genericAttribute key="urn:mdr16:dataelement:23:1">female</genericAttribute>
 <!--Biological gender-->

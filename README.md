@@ -112,6 +112,7 @@ Add a Searchbroker to get and answer queries at http://localhost:8081/admin/brok
 
 You will receive an email with API-Key from Searchbroker Backend, paste these eight numbers and press "ok". Call an ITC to validate your request.
 
+
 Create a new user at http://localhost:8081/gba-connector/admin/user_list.xhtml
 
 Logout and login as normal user to see all handled queries.
