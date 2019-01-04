@@ -18,12 +18,12 @@ If you see database connection errors from the store or the connector, open a se
 
 You might see Docker compose complaining about used ports. For this compose file to start successfully, you need to have the following ports available on your machine:
 
-* 8080 - the Store
-* 8081 - the Connector
-* 9100 - Store metrics
-* 9101 - Connector metrics
-* 5432 - Store database
-* 5433 - Connector database
+* 8081 - the Store
+* 8082 - the Connector
+* 9101 - Store metrics
+* 9102 - Connector metrics
+* 5433 - Store database
+* 5434 - Connector database
 * 9090 - Prometheus
 * 3000 - Grafana
 
@@ -36,10 +36,10 @@ The Docker container needs certain environment variables to be able to run:
 #### Ports used outside compose
 * PORT_STORE - defaults to `8081`
 * PORT_CONNECTOR - defaults to `8082`
-* PORT_STORE_METRICS - defaults to `9100`
-* PORT_CONNECTOR_METRICS - defaults to `9101`
-* PORT_STORE_POSTGRES - defaults to `5432`
-* PORT_CONNECTOR_POSTGRES - defaults to `5433`
+* PORT_STORE_METRICS - defaults to `9101`
+* PORT_CONNECTOR_METRICS - defaults to `9102`
+* PORT_STORE_POSTGRES - defaults to `5433`
+* PORT_CONNECTOR_POSTGRES - defaults to `5434`
 * PORT_PROMETHEUS - defaults to `9090`
 * PORT_GRAFANA - defaults to `3000`
 
@@ -48,20 +48,20 @@ The Docker container needs certain environment variables to be able to run:
 * STORE_MDR_MAP - mapping of mdr elements and db, defaults to `<dataElementGroup name="biobank">urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name="collection">urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name="sample">urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name="sampleContext">urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name="donor">urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name="event">urn:mdr16:dataelementgroup:6:1</dataElementGroup>`
 * STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
 * STORE_POSTGRES_HOST - the host name of the Postgres DB, defaults to `store-db`. Change only if built-in-databse is not used
-* STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
+* STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5433`. Change only if built-in-databse is not used
 * STORE_POSTGRES_DB - the database name, defaults to `samply.store`
 * STORE_POSTGRES_USER - the database username, defaults to `samply`
 * STORE_POSTGRES_PASS - the database password, defaults to `samply`
 * STORE_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
 
 #### Connector specific
-* CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`
-* CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5434`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_DB - the database name, defaults to `samply.connector`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_USER - the database username, defaults to `samply`
 * CONNECTOR_POSTGRES_PASS - the database password, defaults to `samply`
 * CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080`
-* CONNECTOR_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
+* CONNECTOR_CATALINA_OPTS - JVM options, defaults to `-Xmx1g`
 * CONNECTOR_OPERATOR_FIRST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_LAST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_EMAIL - the IT staff which runs the connector
@@ -77,7 +77,6 @@ The Docker container needs certain environment variables to be able to run:
 * PROXY_URL - the URL of the HTTP proxy to use for outgoing connections, "url:port"; enables proxy usage if set
 * PROXY_USER - the user of the proxy account (optional)
 * PROXY_PASS - the password of the proxy account (optional)
-
 
 
 #### Save your environments
