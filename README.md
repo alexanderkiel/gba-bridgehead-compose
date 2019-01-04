@@ -53,7 +53,6 @@ The Docker container needs certain environment variables to be able to run:
 * STORE_POSTGRES_USER - the database username, defaults to `samplystore`
 * STORE_POSTGRES_PASS - the database password, defaults to `samplystore`
 * STORE_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
-* STORE_ENABLE_METRICS - `true` to enable metrics (see below), defaults to `false`
 
 #### Connector specific
 * CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`
@@ -63,7 +62,6 @@ The Docker container needs certain environment variables to be able to run:
 * CONNECTOR_POSTGRES_PASS - the database password, defaults to `samplyconnector`
 * CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080/gba-store`
 * CONNECTOR_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
-* CONNECTOR_ENABLE_METRICS - `true` to enable metrics (see below), defaults to `false`
 * CONNECTOR_OPERATOR_FIRST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_LAST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_EMAIL - the IT staff which runs the connector
@@ -94,7 +92,7 @@ MDR_URL=https://mdr.germanbiobanknode.de/v3/api/mdr
 
 ### Store
 
-You can access the Store under http://localhost:8080/gba-store. A simple test is fetching the import XSD under: http://localhost:8080/gba-store/importXSD.
+You can access the Store under http://localhost:8081. A simple test is fetching the import XSD under: http://localhost:8081/importXSD.
 
 Most work is to import patient/sample data into the store. You have to create a xml file which will be tested against our Metadata Repository.
 The current namespace where all data-elements are defined and all GBA-Components work with can be found under http://mdr.germanbiobanknode.de/view.xhtml?namespace=mdr16
@@ -103,9 +101,9 @@ Instructions for import can be found [here](import/IMPORT.md)
 
 ### Connector
 
-You can access the Connector under http://localhost:8081/gba-connector/ and login to it under http://localhost:8081/gba-connector/login.xhtml (username=admin, password=adminpass).
+You can access the Connector under http://localhost:8082 and login to it under http://localhost:8082/login.xhtml (username=admin, password=adminpass).
 
-Add a Searchbroker to get and answer queries at http://localhost:8081/admin/broker_list.xhtml 
+Add a Searchbroker to get and answer queries at http://localhost:8082/admin/broker_list.xhtml 
 * Broker Adresse = https://search.germanbiobanknode.de/broker/
 * Ihre Email Adresse = your email address to get the API-Key for registration
 * Automatisch antworten = Nur Anzahl (default, so you answer automatically with number of samples)
@@ -113,7 +111,7 @@ Add a Searchbroker to get and answer queries at http://localhost:8081/admin/brok
 You will receive an email with API-Key from Searchbroker Backend, paste these eight numbers and press "ok". Call an ITC to validate your request.
 
 
-Create a new user at http://localhost:8081/gba-connector/admin/user_list.xhtml
+Create a new user at http://localhost:8082/admin/user_list.xhtml
 
 Logout and login as normal user to see all handled queries.
 
@@ -129,20 +127,12 @@ There are two dashboards available. One for the Store and one for the Connector.
 
 ## Partial Usage
 
-One can bring up only parts of the services by starting them individually. For example: starting only the store by starting it's DB and the store itself:
+One can bring up only parts of the services by starting them individually:
 
 ```sh
-docker-compose up -d store-db
-docker-compose up -d store
+docker-compose up store
+docker-compose up connector
 ```
 
-For the connector:
-
-```sh
-docker-compose up -d connector-db
-docker-compose up -d connector
-```
-
-
-[1]: <https://bitbucket.org/medicalinformatics/samply.store.docker>
-[2]: <https://github.com/alexanderkiel/samply.connector.docker>
+[1]: <https://github.com/martinbreu/samply-store>
+[2]: <https://github.com/martinbreu/samply-connector>
