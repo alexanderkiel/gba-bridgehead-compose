@@ -15,13 +15,13 @@ At the first start of the Tomcat server, the REST interface, the schema is creat
 * User: "local_admin"
 * Password: "local_admin"
 
-For a data import into the store, you send a corresponding XML file as a POST request to the REST interface: http://localhost:8080/gba-store/import. In the header the user must be transmitted with his password as "Basic Auth".
+For a data import into the store, you send a corresponding XML file as a POST request to the REST interface: http://localhost:8080/import. In the header the user must be transmitted with his password as "Basic Auth".
 
 The technical means are freely selectable, e.g. Talend Open Studio has a rest interface. For the manual test we recommend Postman or Insomnia.
 
 The XML is validated against an XSD file during import. This XSD can be obtained via GET request from the REST interface:
 
-http://localhost:8080/gba-store/importXSD
+http://localhost:8081/importXSD
 
 In addition, the entries are validated against the MDR by default. If you use a proxy, you must specify it at startup.
 
@@ -29,12 +29,12 @@ Alternatively, you can use a "curl" command. For Windows this command has to be 
 
 Exporting the XSD
 ```
-curl --output importXSD.xsd -X GET http://localhost:8080/gba-store/importXSD
+curl --output importXSD.xsd -X GET http://localhost:8081/importXSD
 ```
 
 Importing an XML
 ```
-curl -H "Content-Type:application/xml" -d @export.xml http://local_admin:local_admin@localhost:8080/gba-store/import
+curl -H "Content-Type:application/xml" -d @export.xml http://local_admin:local_admin@localhost:8081/import
 ```
 
 # Structure of the XML 
@@ -67,9 +67,9 @@ There is currently no way to check the data in the store. However, you can do th
 If you use pgAdmin, you must first connect to the Postgres server created during the installation: Right click → Create Server. In the Connection tab you have to specify:
 
 * Host Name/address: localhost
-* Port: 5434
-* Username: samplystore
-* Password: samplystore
+* Port: 5433
+* Username: samply
+* Password: samply
 
 ## Update behavior
 If an entity is already stored in the store and sent again with an XSD, the fields are updated as follows:
