@@ -21,7 +21,7 @@ services:
       - store-db
     ports:
       - "${PORT_STORE:-8081}:8080"
-      - "${PORT_STORE_METRICS:-9100}:9100"
+      - "${PORT_STORE_METRICS:-9101}:9100"
     depends_on:
       - store-db
     restart: always
@@ -34,7 +34,7 @@ services:
     networks:
       - store-db
     ports:
-      - "${PORT_STORE_POSTGRES:-5436}:5432"
+      - "${PORT_STORE_POSTGRES:-5433}:5432"
     volumes:
       - type: volume
         source: store-db-data
@@ -68,7 +68,7 @@ services:
       - connector-db
     ports:
       - "${PORT_CONNECTOR:-8082}:8080"
-      - "${PORT_CONNECTOR_METRICS:-9101}:9100"
+      - "${PORT_CONNECTOR_METRICS:-9102}:9100"
     depends_on:
       - connector-db
     restart: always
@@ -81,7 +81,7 @@ services:
     networks:
     - connector-db
     ports:
-    - "${PORT_CONNECTOR_POSTGRES:-5433}:5432"
+    - "${PORT_CONNECTOR_POSTGRES:-5434}:5432"
     volumes:
     - type: volume
       source: connector-db-data
