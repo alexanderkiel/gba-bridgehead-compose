@@ -34,8 +34,8 @@ You can either stop all services occupying those ports or change them with envir
 The Docker container needs certain environment variables to be able to run:
 
 #### Ports used outside compose
-* PORT_STORE - defaults to `8080`
-* PORT_CONNECTOR - defaults to `8081`
+* PORT_STORE - defaults to `8081`
+* PORT_CONNECTOR - defaults to `8082`
 * PORT_STORE_METRICS - defaults to `9100`
 * PORT_CONNECTOR_METRICS - defaults to `9101`
 * PORT_STORE_POSTGRES - defaults to `5432`
@@ -49,18 +49,18 @@ The Docker container needs certain environment variables to be able to run:
 * STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
 * STORE_POSTGRES_HOST - the host name of the Postgres DB, defaults to `store-db`. Change only if built-in-databse is not used
 * STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
-* STORE_POSTGRES_DB - the database name, defaults to `samplystore`
-* STORE_POSTGRES_USER - the database username, defaults to `samplystore`
-* STORE_POSTGRES_PASS - the database password, defaults to `samplystore`
+* STORE_POSTGRES_DB - the database name, defaults to `samply.store`
+* STORE_POSTGRES_USER - the database username, defaults to `samply`
+* STORE_POSTGRES_PASS - the database password, defaults to `samply`
 * STORE_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
 
 #### Connector specific
 * CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`
 * CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
-* CONNECTOR_POSTGRES_DB - the database name, defaults to `samplyconnector`. Change only if built-in-databse is not used
-* CONNECTOR_POSTGRES_USER - the database username, defaults to `samplyconnector`
-* CONNECTOR_POSTGRES_PASS - the database password, defaults to `samplyconnector`
-* CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080/gba-store`
+* CONNECTOR_POSTGRES_DB - the database name, defaults to `samply.connector`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_USER - the database username, defaults to `samply`
+* CONNECTOR_POSTGRES_PASS - the database password, defaults to `samply`
+* CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080`
 * CONNECTOR_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
 * CONNECTOR_OPERATOR_FIRST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_LAST_NAME - the IT staff which runs the connector

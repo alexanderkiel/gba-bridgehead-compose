@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   store:
-    image: 50ba31617734
+    image: martinbreu/samply-store:latest
     environment:
       MDR_URL: ${MDR_URL:-http://mdr.germanbiobanknode.de/v3/api/mdr}
       PROXY_URL: ${PROXY_URL}
@@ -41,7 +41,7 @@ services:
         target: /var/lib/postgresql/data
     restart: always
   connector:
-    image: 243825eb36c1
+    image: martinbreu/samply-connector:latest
     environment:
       MDR_URL: ${MDR_URL:-https://mdr.germanbiobanknode.de/v3/api/mdr}
       HTTP_PROXY: ${PROXY_URL}
