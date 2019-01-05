@@ -48,19 +48,19 @@ The Docker container needs certain environment variables to be able to run:
 * STORE_MDR_MAP - mapping of mdr elements and db, defaults to `<dataElementGroup name="biobank">urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name="collection">urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name="sample">urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name="sampleContext">urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name="donor">urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name="event">urn:mdr16:dataelementgroup:6:1</dataElementGroup>`
 * STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
 * STORE_POSTGRES_HOST - the host name of the Postgres DB, defaults to `store-db`. Change only if built-in-databse is not used
-* STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5433`. Change only if built-in-databse is not used
+* STORE_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
 * STORE_POSTGRES_DB - the database name, defaults to `samply.store`
 * STORE_POSTGRES_USER - the database username, defaults to `samply`
 * STORE_POSTGRES_PASS - the database password, defaults to `samply`
-* STORE_CATALINA_OPTS - JVM options for Tomcat like `-Xmx8g`
+* STORE_CATALINA_OPTS - JVM options for Tomcat, defaults to `-Xmx1g`
 
 #### Connector specific
 * CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`. Change only if built-in-databse is not used
-* CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5434`. Change only if built-in-databse is not used
+* CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_DB - the database name, defaults to `samply.connector`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_USER - the database username, defaults to `samply`
 * CONNECTOR_POSTGRES_PASS - the database password, defaults to `samply`
-* CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080`
+* CONNECTOR_STORE_URL - the URL of the store to connect to, defaults to `http://store:8080`. Change only if built-in-store is not used
 * CONNECTOR_CATALINA_OPTS - JVM options, defaults to `-Xmx1g`
 * CONNECTOR_OPERATOR_FIRST_NAME - the IT staff which runs the connector
 * CONNECTOR_OPERATOR_LAST_NAME - the IT staff which runs the connector
@@ -100,7 +100,7 @@ Instructions for import can be found [here](import/IMPORT.md)
 
 ### Connector
 
-You can access the Connector under http://localhost:8082 and login to it under http://localhost:8082/login.xhtml (username=admin, password=adminpass).
+You can access the Connector under http://localhost:8082 and login to it under http://localhost:8082/login.xhtml The login credentials are **admin**, **adminpass**.
 
 Add a Searchbroker to get and answer queries at http://localhost:8082/admin/broker_list.xhtml 
 * Broker Adresse = https://search.germanbiobanknode.de/broker/
