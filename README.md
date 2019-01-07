@@ -8,32 +8,17 @@ This Docker Compose project includes both, the [Store][1] and the [Connector][2]
 
 * use a machine running Docker
 * checkout this repo
+* check for free ports (see below)
 * inside the repo dir, run `docker-compose up`
 
 Docker compose will start all containers and print the logs to the console.
 
 If you see database connection errors from the store or the connector, open a second terminal and run `docker-compose stop` followed by `docker-compose start`. Database connection problems should only occur at the first start because the store and the connector doesn't wait for the databases to be ready. Both try to connect at startup which might be to early.
 
-### Ports
+### Ports outside container
 
 You might see Docker compose complaining about used ports. For this compose file to start successfully, you need to have the following ports available on your machine:
 
-* 8081 - the Store
-* 8082 - the Connector
-* 9101 - Store metrics
-* 9102 - Connector metrics
-* 5433 - Store database
-* 5434 - Connector database
-* 9090 - Prometheus
-* 3000 - Grafana
-
-You can either stop all services occupying those ports or change them with environments, see below.
-
-## Environment
-
-The Docker container needs certain environment variables to be able to run:
-
-#### Ports used outside compose
 * PORT_STORE - defaults to `8081`
 * PORT_CONNECTOR - defaults to `8082`
 * PORT_STORE_METRICS - defaults to `9101`
@@ -42,6 +27,12 @@ The Docker container needs certain environment variables to be able to run:
 * PORT_CONNECTOR_POSTGRES - defaults to `5434`
 * PORT_PROMETHEUS - defaults to `9090`
 * PORT_GRAFANA - defaults to `3000`
+
+You can either stop all services occupying those ports or change them with environments, see below.
+
+## Environment
+
+The Docker containers accept certain environment variables:
 
 #### Store specific
 * STORE_MDR_NAMESPACE - current namespace which changes after every change depending data-elements, defaults to `mdr16`
