@@ -7,7 +7,7 @@ Samply.Store is implemented as a web service and does not have a graphical UI ye
 * Network Communication/Firewall: Outgoing http and https. Proxies are supported. No VPN or incoming ports required.
 
 # Data model
-![Datamodel](https://github.com/martinbreu/gba-bridgehead-compose/blob/feature/Graz/import/datamodel-sample.png)
+![Datamodel](https://github.com/martinbreu/gba-bridgehead-compose/blob/master/import/datamodel-sample.png)
 
 # REST interface
 At the first start of the Tomcat server, the REST interface, the schema is created in the database. In addition, a user is created:
@@ -66,10 +66,11 @@ There is currently no way to check the data in the store. However, you can do th
 
 If you use pgAdmin, you must first connect to the Postgres server created during the installation: Right click → Create Server. In the Connection tab you have to specify:
 
-* Host Name/address: localhost
+* Host Name/address: localhost (maybe the hostname of your server)
 * Port: 5433
 * Username: samply
 * Password: samply
+* Database: samply.store
 
 ## Update behavior
 If an entity is already stored in the store and sent again with an XSD, the fields are updated as follows:
