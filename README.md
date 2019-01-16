@@ -48,7 +48,7 @@ The Docker containers and docker-compose.yml accept certain environment variable
 * PORT_PROMETHEUS - defaults to `9090`
 * PORT_GRAFANA - defaults to `3000`
 
-You can either stop all services occupying those ports or [change and save your personal environments](#Save-your-environments-(Optional)) 
+You can either stop all services occupying those ports or [change and save your personal environments](#save-your-environments-optional) 
 
 
 #### Store specific (Optional)
