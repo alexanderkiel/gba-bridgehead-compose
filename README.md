@@ -1,21 +1,40 @@
-# Docker Compose File for GBA Bridgehead
+# GBA Bridgehead
 
-The bridgehead consists of two main components, the store and the connector. In addition to that, both need a Postgres database. To showcase monitoring, a Prometheus instance together with Grafana is also included.
+The bridgehead consists of two main components, the [Store][1] and the [Connector][2] running in Tomcat 8. In addition to that, both need a Postgres 9.6 database.
 
-This Docker Compose project includes both, the [Store][1] and the [Connector][2]. If one needs only one of them, on can either bring up only the specific one or create a custom Docker Compose file.
+Steps:
+* Install and run Bridgehead ([Docker-Compose](#Docker-Compose) which is recommended, or manual with Windows OR Linux)
+* Create xml and import into Store ([Import-Readme](import/IMPORT.md))
+* Connect to central Searchbroker (see Connector description)
 
-## Usage
+## Install
 
-* use a machine running Docker
-* checkout this repo
-* check for free ports (see below)
-* inside the repo dir, run `docker-compose up`
+### Docker-Compose
+
+This Docker Compose project includes both, the [Store][1] and the [Connector][2], both Postgres databases and to showcase monitoring, a Prometheus instance together with Grafana.
+
+1. After checking for free ports (see 'Ports outside container'), bring all up with:
+
+        git clone https://github.com/martinbreu/gba-bridgehead-compose
+        cd gba-bridgehead-compose
+        docker-compose up
 
 Docker compose will start all containers and print the logs to the console.
 
 If you see database connection errors from the store or the connector, open a second terminal and run `docker-compose stop` followed by `docker-compose start`. Database connection problems should only occur at the first start because the store and the connector doesn't wait for the databases to be ready. Both try to connect at startup which might be to early.
 
-### Ports outside container
+If one needs only one of them, on can bring up only the specific one with:
+
+```sh
+docker-compose up store
+docker-compose up connector
+```
+
+#### Environment (Optional)
+
+The Docker containers accept certain environment variables:
+
+##### Ports outside container
 
 You might see Docker compose complaining about used ports. For this compose file to start successfully, you need to have the following ports available on your machine:
 
@@ -30,11 +49,8 @@ You might see Docker compose complaining about used ports. For this compose file
 
 You can either stop all services occupying those ports or change them with environments, see below.
 
-## Environment
 
-The Docker containers accept certain environment variables:
-
-#### Store specific
+##### Store specific (Optional)
 * STORE_MDR_NAMESPACE - current namespace which changes after every change depending data-elements, defaults to `mdr16`
 * STORE_MDR_MAP - mapping of mdr elements and db, defaults to `<dataElementGroup name="biobank">urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name="collection">urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name="sample">urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name="sampleContext">urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name="donor">urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name="event">urn:mdr16:dataelementgroup:6:1</dataElementGroup>`
 * STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
@@ -45,7 +61,7 @@ The Docker containers accept certain environment variables:
 * STORE_POSTGRES_PASS - the database password, defaults to `samply`
 * STORE_CATALINA_OPTS - JVM options for Tomcat, defaults to `-Xmx1g`
 
-#### Connector specific
+##### Connector specific (Optional)
 * CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_DB - the database name, defaults to `samply.connector`. Change only if built-in-databse is not used
@@ -63,14 +79,14 @@ The Docker containers accept certain environment variables:
 * CONNECTOR_MAIL_FROM_ADDRESS - mail address from which mails are sent, defaults to ``
 * CONNECTOR_MAIL_FROM_NAME - subject of mails, defaults to ``
 
-#### Common
+##### Common (Optional)
 * MDR_URL - api-url of mdr host, defaults to `http://mdr.germanbiobanknode.de/v3/api/mdr`
 * PROXY_URL - the URL of the HTTP proxy to use for outgoing connections, "url:port"; enables proxy usage if set
 * PROXY_USER - the user of the proxy account (optional)
 * PROXY_PASS - the password of the proxy account (optional)
 
 
-#### Save your environments
+##### Save your environments (Optional)
 In the repo directory, create a file called `.env`, here you can save your environments if default values changed.
 Docker-Compose will find this file at startup.
 
@@ -79,6 +95,17 @@ Docker-Compose will find this file at startup.
 MDR_NAMESPACE=mdr17
 MDR_URL=https://mdr.germanbiobanknode.de/v3/api/mdr
 ```
+
+
+
+### WINDOWS
+
+### Linux
+
+
+
+
+## Description of running components
 
 ### Store
 
@@ -106,7 +133,7 @@ Create a new user at http://localhost:8082/admin/user_list.xhtml
 Logout and login as normal user to see all handled queries.
 
 
-### Grafana
+### Grafana (Optional)
 
 You can access Grafana under http://localhost:3000. The login credentials are **admin**, **admin**.
 
@@ -115,14 +142,7 @@ There are two dashboards available. One for the Store and one for the Connector.
 * Store dashboard: http://localhost:3000/d/wEuwMIpmz
 * Connector dashboard: http://localhost:3000/d/wEuwMIpmy
 
-## Partial Usage
 
-One can bring up only parts of the services by starting them individually:
-
-```sh
-docker-compose up store
-docker-compose up connector
-```
 
 [1]: <https://github.com/martinbreu/samply-store>
 [2]: <https://github.com/martinbreu/samply-connector>
