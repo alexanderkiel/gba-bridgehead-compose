@@ -3,17 +3,19 @@
 The bridgehead consists of two main components, the [Store][1] and the [Connector][2] running in Tomcat 8. In addition to that, both need a Postgres 9.6 database.
 
 Steps:
-* Install and run Bridgehead ([Docker-Compose](#Docker-Compose) which is recommended, or manual with Windows OR Linux)
+* Install and run Bridgehead ([Docker-Compose](#Docker-Compose) which is recommended, or manual with [WINDOWS](#WINDOWS) OR [LINUX](#LINUX))
 * Create xml and import into Store ([Import-Readme](import/IMPORT.md))
-* Connect to central Searchbroker (see Connector description)
+* [Connect](#Connector) to central [Searchbroker](https://search.germanbiobanknode.de/)
 
-## Install
 
-### Docker-Compose
-
+## Docker-Compose
 This Docker Compose project includes both, the [Store][1] and the [Connector][2], both Postgres databases and to showcase monitoring, a Prometheus instance together with Grafana.
 
-1. After checking for free ports (see 'Ports outside container'), bring all up with:
+1. [Install Docker](https://docs.docker.com/install/)
+And test Docker in any command line with:
+        docker run hello-world
+
+2. After checking for free [ports](#Ports-outside-container), bring all up with:
 
         git clone https://github.com/martinbreu/gba-bridgehead-compose
         cd gba-bridgehead-compose
@@ -30,11 +32,11 @@ docker-compose up store
 docker-compose up connector
 ```
 
-#### Environment (Optional)
+### Environment (Optional)
 
 The Docker containers accept certain environment variables:
 
-##### Ports outside container
+#### Ports outside container
 
 You might see Docker compose complaining about used ports. For this compose file to start successfully, you need to have the following ports available on your machine:
 
@@ -50,7 +52,7 @@ You might see Docker compose complaining about used ports. For this compose file
 You can either stop all services occupying those ports or change them with environments, see below.
 
 
-##### Store specific (Optional)
+#### Store specific (Optional)
 * STORE_MDR_NAMESPACE - current namespace which changes after every change depending data-elements, defaults to `mdr16`
 * STORE_MDR_MAP - mapping of mdr elements and db, defaults to `<dataElementGroup name="biobank">urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name="collection">urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name="sample">urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name="sampleContext">urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name="donor">urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name="event">urn:mdr16:dataelementgroup:6:1</dataElementGroup>`
 * STORE_MDR_VALIDATION - validation against mdr during store import, defaults to `true`
@@ -61,7 +63,7 @@ You can either stop all services occupying those ports or change them with envir
 * STORE_POSTGRES_PASS - the database password, defaults to `samply`
 * STORE_CATALINA_OPTS - JVM options for Tomcat, defaults to `-Xmx1g`
 
-##### Connector specific (Optional)
+#### Connector specific (Optional)
 * CONNECTOR_POSTGRES_HOST - the host name of the Postgres DB, defaults to `connector-db`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_PORT - the port of the Postgres DB, defaults to `5432`. Change only if built-in-databse is not used
 * CONNECTOR_POSTGRES_DB - the database name, defaults to `samply.connector`. Change only if built-in-databse is not used
@@ -79,14 +81,14 @@ You can either stop all services occupying those ports or change them with envir
 * CONNECTOR_MAIL_FROM_ADDRESS - mail address from which mails are sent, defaults to ``
 * CONNECTOR_MAIL_FROM_NAME - subject of mails, defaults to ``
 
-##### Common (Optional)
+#### Common (Optional)
 * MDR_URL - api-url of mdr host, defaults to `http://mdr.germanbiobanknode.de/v3/api/mdr`
 * PROXY_URL - the URL of the HTTP proxy to use for outgoing connections, "url:port"; enables proxy usage if set
 * PROXY_USER - the user of the proxy account (optional)
 * PROXY_PASS - the password of the proxy account (optional)
 
 
-##### Save your environments (Optional)
+#### Save your environments (Optional)
 In the repo directory, create a file called `.env`, here you can save your environments if default values changed.
 Docker-Compose will find this file at startup.
 
@@ -98,11 +100,22 @@ MDR_URL=https://mdr.germanbiobanknode.de/v3/api/mdr
 
 
 
-### WINDOWS
+## WINDOWS
 
-### Linux
+Under construction!!! (Follow config.yml and Dockerfile)
 
+* Install [Tomcat 8.5](https://tomcat.apache.org/download-80.cgi)
+* Install [Postgresql 9.6](https://www.postgresql.org/download/)
+    * Create databases: samply.store and samply.connector with user and password = samply
 
+* Copy and edit configuration files (DOWNLOADLINK MISSING) to 'C:\%username%\.config\samply\'
+* Download and move WAR files to '%tomcat-dir%\webapps\
+    https://maven.samply.de/nexus/service/local/repositories/oss-releases/content/de/samply/store-rest/4.2.6/store-rest-4.2.6.war
+    https://maven.samply.de/nexus/service/local/repositories/oss-releases/content/de/samply/share-client/3.0.7/share-client-3.0.7.war
+
+## LINUX
+
+Under construction!!!  (Follow config.yml and Dockerfile)
 
 
 ## Description of running components
