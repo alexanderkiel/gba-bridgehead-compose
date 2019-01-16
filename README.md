@@ -1,6 +1,6 @@
 # GBA Bridgehead
 
-The bridgehead consists of two main components, the [Store][1] and the [Connector][2] running in Tomcat 8. In addition to that, both need a Postgres 9.6 database.
+The Bridgehead consists of two main components, the [Store][1] and the [Connector][2] running in Tomcat 8. In addition to that, both need a Postgres 9.6 database.
 
 Steps:
 * Install and run Bridgehead ([Docker-Compose](#Docker-Compose) which is recommended, or manual with [WINDOWS](#WINDOWS) OR [LINUX](#LINUX))
@@ -13,6 +13,7 @@ This Docker Compose project includes both, the [Store][1] and the [Connector][2]
 
 1. [Install Docker](https://docs.docker.com/install/)
 And test Docker in any command line with:
+        
         docker run hello-world
 
 2. After checking for free [ports](#Ports-outside-container), bring all up with:
@@ -34,11 +35,9 @@ docker-compose up connector
 
 ### Environment (Optional)
 
-The Docker containers accept certain environment variables:
+The Docker containers and docker-compose.yml accept certain environment variables:
 
 #### Ports outside container
-
-You might see Docker compose complaining about used ports. For this compose file to start successfully, you need to have the following ports available on your machine:
 
 * PORT_STORE - defaults to `8081`
 * PORT_CONNECTOR - defaults to `8082`
@@ -49,7 +48,7 @@ You might see Docker compose complaining about used ports. For this compose file
 * PORT_PROMETHEUS - defaults to `9090`
 * PORT_GRAFANA - defaults to `3000`
 
-You can either stop all services occupying those ports or change them with environments, see below.
+You can either stop all services occupying those ports or [change and save your personal environments](#Save-your-environments-(Optional)) 
 
 
 #### Store specific (Optional)
