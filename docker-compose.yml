@@ -1,61 +1,87 @@
 version: '3.2'
 services:
   store:
-    image: samply/samply.store:4.2.5
+    image: martinbreu/samply-store:ff82fb9a6081398f819677d328ba6021a1431893
     environment:
-      POSTGRES_HOST: store-db
-      POSTGRES_PASS: samplystore
-      CATALINA_OPTS: "-Xmx4g"
-      ENABLE_METRICS: "true"
+      MDR_URL: ${MDR_URL:-http://mdr.germanbiobanknode.de/v3/api/mdr}
+      PROXY_URL: ${PROXY_URL}
+      PROXY_USER: ${PROXY_USER}
+      PROXY_PASS: ${PROXY_PASS}
+      MDR_NAMESPACE: ${STORE_MDR_NAMESPACE:-mdr16}
+      MDR_MAP: ${STORE_MDR_MAP:-<dataElementGroup name='biobank'>urn:mdr16:dataelementgroup:1:1</dataElementGroup><dataElementGroup name='collection'>urn:mdr16:dataelementgroup:2:1</dataElementGroup><dataElementGroup name='sample'>urn:mdr16:dataelementgroup:3:1</dataElementGroup><dataElementGroup name='sampleContext'>urn:mdr16:dataelementgroup:4:1</dataElementGroup><dataElementGroup name='donor'>urn:mdr16:dataelementgroup:5:1</dataElementGroup><dataElementGroup name='event'>urn:mdr16:dataelementgroup:6:1</dataElementGroup>}
+      MDR_VALIDATION: ${STORE_MDR_VALIDATION:-"true"}
+      POSTGRES_HOST: ${STORE_POSTGRES_HOST:-store-db}
+      POSTGRES_PORT: ${STORE_POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${STORE_POSTGRES_DB:-samply.store}
+      POSTGRES_USER: ${STORE_POSTGRES_USER:-samply}
+      POSTGRES_PASS: ${STORE_POSTGRES_PASS:-samply}
+      CATALINA_OPTS: ${STORE_CATALINA_OPTS:-"-Xmx1g"}
     networks:
-    - gba
-    - store-db
+      - gba
+      - store-db
     ports:
-    - "8080:8080"
-    - "9100:9100"
+      - "${PORT_STORE:-8081}:8080"
+      - "${PORT_STORE_METRICS:-9101}:9100"
     depends_on:
-    - store-db
+      - store-db
     restart: always
   store-db:
     image: postgres:9.6
     environment:
-      POSTGRES_USER: samplystore
-      POSTGRES_PASSWORD: samplystore
+      POSTGRES_USER: ${STORE_POSTGRES_USER:-samply}
+      POSTGRES_PASSWORD: ${STORE_POSTGRES_PASS:-samply}
+      POSTGRES_DB: ${STORE_POSTGRES_DB:-samply.store}
     networks:
-    - store-db
+      - store-db
     ports:
-    - "5432:5432"
+      - "${PORT_STORE_POSTGRES:-5433}:5432"
     volumes:
-    - type: volume
-      source: store-db-data
-      target: /var/lib/postgresql/data
+      - type: volume
+        source: store-db-data
+        target: /var/lib/postgresql/data
     restart: always
   connector:
-    image: akiel/samply.connector:0.1
+    image: martinbreu/samply-connector:b171c8938dafa04c69e613c44ae8c9108b615179
     environment:
-      POSTGRES_HOST: connector-db
-      POSTGRES_PASS: samplyconnector
-      STORE_URL: http://store:8080/gba-store
-      CATALINA_OPTS: "-Xmx1g"
-      ENABLE_METRICS: "true"
+      MDR_URL: ${MDR_URL:-https://mdr.germanbiobanknode.de/v3/api/mdr}
+      HTTP_PROXY: ${PROXY_URL}
+      PROXY_USER: ${PROXY_USER}
+      PROXY_PASS: ${PROXY_PASS}
+      POSTGRES_HOST: ${CONNECTOR_POSTGRES_HOST:-connector-db}
+      POSTGRES_PORT: ${CONNECTOR_POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${CONNECTOR_POSTGRES_DB:-samply.connector}
+      POSTGRES_USER: ${CONNECTOR_POSTGRES_USER:-samply}
+      POSTGRES_PASS: ${CONNECTOR_POSTGRES_PASS:-samply}
+      STORE_URL: ${CONNECTOR_STORE_URL:-http://store:8080}
+      CATALINA_OPTS: ${CONNECTOR_CATALINA_OPTS:-"-Xmx1g"}
+      OPERATOR_FIRST_NAME: ${CONNECTOR_OPERATOR_FIRST_NAME:-UNKNOWN}
+      OPERATOR_LAST_NAME: ${CONNECTOR_OPERATOR_LAST_NAME:-UNKNOWN}
+      OPERATOR_EMAIL: ${CONNECTOR_OPERATOR_EMAIL:-UNKNOWN}
+      OPERATOR_PHONE: ${CONNECTOR_OPERATOR_PHONE:-UNKNOWN}
+      MAIL_HOST: ${CONNECTOR_MAIL_HOST:--relay2int1.klinik.uni-wuerzburg.de}
+      MAIL_PORT: ${CONNECTOR_MAIL_PORT:-25}
+      MAIL_PROTOCOL: ${CONNECTOR_MAIL_PROTOCOL:-smtp}
+      MAIL_FROM_ADDRESS: ${CONNECTOR_MAIL_FROM_ADDRESS:-breu_m@ukw.de}
+      MAIL_FROM_NAME: ${CONNECTOR_MAIL_FROM_NAME:-Lokal Samply Searchbroker}
     networks:
-    - gba
-    - connector-db
+      - gba
+      - connector-db
     ports:
-    - "8081:8080"
-    - "9101:9100"
+      - "${PORT_CONNECTOR:-8082}:8080"
+      - "${PORT_CONNECTOR_METRICS:-9102}:9100"
     depends_on:
-    - connector-db
+      - connector-db
     restart: always
   connector-db:
     image: postgres:9.6
     environment:
-      POSTGRES_USER: samplyconnector
-      POSTGRES_PASSWORD: samplyconnector
+      POSTGRES_USER: ${CONNECTOR_POSTGRES_USER:-samply}
+      POSTGRES_PASSWORD: ${CONNECTOR_POSTGRES_PASS:-samply}
+      POSTGRES_DB: ${CONNECTOR_POSTGRES_DB:-samply.connector}
     networks:
     - connector-db
     ports:
-    - "5433:5432"
+    - "${PORT_CONNECTOR_POSTGRES:-5434}:5432"
     volumes:
     - type: volume
       source: connector-db-data
@@ -64,14 +90,14 @@ services:
   prometheus:
     image: prom/prometheus:v2.3.2
     networks:
-    - gba
+      - gba
     ports:
-    - "9090:9090"
+      - "${PORT_PROMETHEUS:-9090}:9090"
     volumes:
-    - type: bind
-      source: ./prometheus
-      target: /etc/prometheus
-      read_only: true
+      - type: bind
+        source: ./prometheus
+        target: /etc/prometheus
+        read_only: true
     restart: always
   grafana:
     image: grafana/grafana:5.2.2
@@ -79,20 +105,20 @@ services:
       GF_SESSION_PROVIDER: memory
       GF_LOG_MODE: console
     networks:
-    - gba
+      - gba
     ports:
-    - "3000:3000"
+      - "${PORT_GRAFANA:-3000}:3000"
     volumes:
-    - type: volume
-      source: grafana-data
-      target: /var/lib/grafana
-    - type: bind
-      source: ./grafana/dashboards
-      target: /var/lib/grafana-dashboards
-    - type: bind
-      source: ./grafana/provisioning
-      target: /etc/grafana/provisioning
-      read_only: true
+      - type: volume
+        source: grafana-data
+        target: /var/lib/grafana
+      - type: bind
+        source: ./grafana/dashboards
+        target: /var/lib/grafana-dashboards
+      - type: bind
+        source: ./grafana/provisioning
+        target: /etc/grafana/provisioning
+        read_only: true
     restart: always
 networks:
   gba:
